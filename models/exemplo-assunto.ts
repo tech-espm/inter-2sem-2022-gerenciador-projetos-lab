@@ -1,11 +1,13 @@
 ﻿import app = require("teem");
 
-export = class Assunto {
-	public id: number;
-	public nome: string;
-	public respostapadrao: string;
-	public criacao: string;
+interface Assunto {
+	id: number;
+	nome: string;
+	respostapadrao: string;
+	criacao: string;
+}
 
+class Assunto {
 	private static validar(assunto: Assunto): string {
 		if (!assunto)
 			return "Assunto inválido";
@@ -27,21 +29,24 @@ export = class Assunto {
 
 	public static listar(): Promise<Assunto[]> {
 		return app.sql.connect(async (sql) => {
-			return (await sql.query("select id, nome, date_format(criacao, '%d/%m/%Y') criacao from assunto order by nome asc")) as Assunto[] || [];
+			return (await sql.query("select id, nome, date_format(criacao, '%d/%m/%Y') criacao from assunto order by nome asc"));
 		});
 	}
 
 	public static obter(id: number): Promise<Assunto> {
 		return app.sql.connect(async (sql) => {
-			const lista = (await sql.query("select id, nome, respostapadrao, date_format(criacao, '%d/%m/%Y') from assunto where id = ?", [id])) as Assunto[];
-			return (lista && lista[0]) || null;
+			const lista: Assunto[] = (await sql.query("select id, nome, respostapadrao, date_format(criacao, '%d/%m/%Y') from assunto where id = ?", [id]));
+			if (!lista || lista.length === 0) {
+				return null;
+			}
+			return lista[0];
 		});
 	}
 
-	public static criar(assunto: Assunto): Promise<string> {
+	public static async criar(assunto: Assunto): Promise<string> {
 		const erro = Assunto.validar(assunto);
 		if (erro)
-			return Promise.resolve(erro);
+			return erro;
 
 		return app.sql.connect(async (sql) => {
 			try {
@@ -79,3 +84,5 @@ export = class Assunto {
 		});
 	}
 };
+
+export = Assunto;
