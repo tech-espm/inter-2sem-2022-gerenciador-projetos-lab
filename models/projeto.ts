@@ -59,13 +59,13 @@ class Projeto {
 
 	public static listar(): Promise<Projeto[]> {
 		return app.sql.connect(async (sql) => {
-			return (await sql.query("select idprojeto, idcliente, idgestor, idtecnico, nome_projeto, ano_inicial, semestre_inicial, ano_final, semestre_final from projeto order by nome_projeto asc"));
+			return (await sql.query("select p.idprojeto, p.idcliente, p.idgestor, p.idtecnico, p.nome_projeto, p.ano_inicial, p.semestre_inicial, p.ano_final, p.semestre_final, p.aprovado, c.nome_cliente, g.nome from projeto p inner join cliente c inner join usuario g order by nome_projeto asc;"));
 		});
 	}
 
 	public static obter(id: number): Promise<Projeto> {
 		return app.sql.connect(async (sql) => {
-			const lista: Projeto[] = (await sql.query("select id, nome, respostapadrao, date_format(criacao, '%d/%m/%Y') from projeto where id = ?", [id]));
+			const lista: Projeto[] = (await sql.query("select idprojeto, nome_projeto, date_format(criacao, '%d/%m/%Y') from projeto where id = ?", [id]));
 			if (!lista || lista.length === 0) {
 				return null;
 			}
