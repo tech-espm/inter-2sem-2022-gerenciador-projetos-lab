@@ -24,13 +24,13 @@ class Aluno {
 
 	public static listar(): Promise<Aluno[]> {
 		return app.sql.connect(async (sql) => {
-			return (await sql.query("select idaluno, idcliente, idgestor, idtecnico, nome_aluno, ano_inicial, semestre_inicial, ano_final, semestre_final from aluno order by nome_aluno asc"));
+			return (await sql.query("select idaluno, nome_aluno, ra_aluno from aluno"));
 		});
 	}
 
 	public static obter(id: number): Promise<Aluno> {
 		return app.sql.connect(async (sql) => {
-			const lista: Aluno[] = (await sql.query("select id, nome, respostapadrao, date_format(criacao, '%d/%m/%Y') from aluno where id = ?", [id]));
+			const lista: Aluno[] = (await sql.query("select idaluno, nome_aluno, ra_aluno from aluno where idaluno = ?", [id]));
 			if (!lista || lista.length === 0) {
 				return null;
 			}
@@ -49,7 +49,7 @@ class Aluno {
  				return null;
 			} catch (e) {
 				if (e.code && e.code === "ER_DUP_ENTRY")
-					return `O aluno ${aluno.nome_aluno} ou o id ${aluno.idaluno} já existe`;
+					return `O aluno ${aluno.ra_aluno} já existe`;
 				throw e;
 			}
 		});
@@ -62,11 +62,11 @@ class Aluno {
 
 		return app.sql.connect(async (sql) => {
 			try {
-				await sql.query("update aluno set nome_aluno = ?, where idaluno = ?", [aluno.nome_aluno, aluno.idaluno]);
+				await sql.query("update aluno set nome_aluno = ?, ra_aluno = ? where idaluno = ?", [aluno.nome_aluno, aluno.ra_aluno, aluno.idaluno]);
 				return (sql.affectedRows ? null : "Aluno não encontrado");
 			} catch (e) {
 				if (e.code && e.code === "ER_DUP_ENTRY")
-					return `O aluno ${aluno.nome_aluno} já existe`;
+					return `O aluno ${aluno.ra_aluno} já existe`;
 				throw e;
 			}
 		});
