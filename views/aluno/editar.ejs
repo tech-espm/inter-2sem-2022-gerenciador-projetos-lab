@@ -1,0 +1,64 @@
+<input type="hidden" id="idaluno" name="idaluno" value="<%=(item ? item.idaluno : 0) %>" />
+
+<div class="row">
+	<div class="col-sm-6">
+		<div class="form-group">
+			<label for="ra_aluno">RA</label>
+			<input id="ra_aluno" name="ra_aluno" class="form-control" type="number" value="<%=(item ? item.ra_aluno : '') %>" />
+		</div>
+	</div>
+
+	<div class="col-sm-6">
+		<div class="form-group">
+			<label for="nome_aluno">Nome</label>
+			<input id="nome_aluno" name="nome_aluno" maxlength="100" class="form-control" type="text" spellcheck="false" value="<%=(item ? item.nome_aluno : '') %>" />
+		</div>
+	</div>
+</div>
+
+<%- contentFor("scripts") %>
+<script type="text/javascript">
+	//<![CDATA[
+	"use strict";
+
+	$("#form").validate({
+		rules: {
+			ra_aluno: {
+				required: true
+			},
+			nome_aluno: {
+				required: true
+			}
+		},
+
+		submitHandler: function (form) {
+			if (JsonWebApi.active)
+				return;
+
+			Swal.wait();
+
+			//<% if (item) { %>
+
+			JsonWebApi.postFormData("<%- root %>/api/aluno/editar", form, function (response) {
+				if (response.success)
+					Swal.success("Aluno alterado com sucesso! " + emoji.happy);
+				else
+					Swal.error(response.value + " " + emoji.sad);
+			});
+
+			//<% } else { %>
+
+			JsonWebApi.postFormData("<%- root %>/api/aluno/criar", form, function (response) {
+				if (response.success) {
+					resetForm("#form");
+					Swal.success("Aluno criado com sucesso! " + emoji.happy);
+				} else {
+					Swal.error(response.value + " " + emoji.sad);
+				}
+			});
+
+			//<% } %>
+		}
+	});
+	//]]>
+</script>

@@ -15,6 +15,32 @@
 	</li>
 
 	<li class="nav-item">
+		<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAlunos" aria-expanded="true" aria-controls="collapseAlunos">
+			<i class="fas fa-fw fa-chart-area"></i>
+			<span>Alunos</span>
+		</a>
+		<div id="collapseAlunos" class="collapse" data-parent="#accordionSidebar">
+			<div class="bg-white py-2 collapse-inner rounded">
+				<a class="collapse-item" href="<%- root %>/aluno/criar">Criar</a>
+				<a class="collapse-item" href="<%- root %>/aluno/listar">Gerenciar</a>
+			</div>
+		</div>
+	</li>
+
+	<li class="nav-item">
+		<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseClientes" aria-expanded="true" aria-controls="collapseClientes">
+			<i class="fas fa-fw fa-chart-area"></i>
+			<span>Clientes</span>
+		</a>
+		<div id="collapseClientes" class="collapse" data-parent="#accordionSidebar">
+			<div class="bg-white py-2 collapse-inner rounded">
+				<a class="collapse-item" href="<%- root %>/cliente/criar">Criar</a>
+				<a class="collapse-item" href="<%- root %>/cliente/listar">Gerenciar</a>
+			</div>
+		</div>
+	</li>
+
+	<li class="nav-item">
 		<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseProjetos" aria-expanded="true" aria-controls="collapseProjetos">
 			<i class="fas fa-fw fa-chart-area"></i>
 			<span>Projetos</span>

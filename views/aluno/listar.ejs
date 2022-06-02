@@ -1,0 +1,63 @@
+﻿<table class="table table-flush table-striped table-hover" id="tabela"></table>
+
+<%- contentFor("scripts") %>
+<script type="text/javascript">
+	//<![CDATA[
+	"use strict";
+
+	var tabela = prepareDataTable("tabela", {
+		order: [[1, "asc"]],
+		deferRender: true,
+		columns: [
+			{ title: "", "class": "col-min", searchable: false, orderable: false, data: "idaluno", render: function (v, type, row) { return '<a target="_blank" title="Editar" href="<%- root %>/aluno/editar?id=' + row.idaluno + '" class="btn btn-sm btn-outline-primary"><i class="fa fa-fw fa-edit"></i></a> <button title="Excluir" type="button" data-excluir="1" class="btn btn-sm btn-outline-danger"><i class="fa fa-fw fa-times"></i></button>'; } },
+			{ title: "RA", data: "ra_aluno" },
+			{ title: "Nome", render: encode, data: "nome_aluno" }
+		],
+		data: <%- JSON.stringify(lista) %>,
+		export: { title: "Alunos" }
+	});
+
+	$("#tabela").on("click", "tbody button", function () {
+		if (JsonWebApi.active)
+			return;
+
+		var trClicada = this.parentNode.parentNode,
+			ra_aluno = null,
+			aluno = tabela.row(trClicada).data();
+
+		if (this.getAttribute("data-excluir")) {
+			Swal.okcancel({
+				html: 'Tem certeza que deseja excluir o aluno "' + aluno.ra_aluno + '"? Esta operação NÃO pode ser desfeita!<br/><br/>Para confirmar a exclusão, por favor, digite abaixo o RA do aluno conforme exibido acima.<br/><br/><label for="txtExcluirRA">RA do aluno</label><input type="number" class="form-control" autocomplete="off" id="txtExcluirRA" />',
+				confirmButtonText: "Excluir",
+				preConfirm: function () {
+					ra_aluno = parseInt($("#txtExcluirRA").val());
+					return true;
+				}
+			}, null, true).then(function (result) {
+				if (JsonWebApi.active || !trClicada)
+					return;
+
+				if (result.value) {
+					if (ra_aluno !== aluno.ra_aluno) {
+						Swal.error("O RA do usuário não confere! " + emoji.sad);
+						return;
+					}
+
+					Swal.wait();
+
+					JsonWebApi.delete("<%- root %>/api/aluno/excluir", function (response) {
+						if (response.success) {
+							Swal.success("Aluno excluído com sucesso! " + emoji.happy);
+							tabela.row(trClicada).remove().draw();
+						} else {
+							Swal.error(response.value + " " + emoji.sad);
+						}
+						trClicada = null;
+					}, "idaluno", aluno.idaluno);
+				}
+			});
+		}
+	});
+
+	//]]>
+</script>
