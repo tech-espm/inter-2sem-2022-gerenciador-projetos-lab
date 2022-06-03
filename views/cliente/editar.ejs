@@ -1,0 +1,74 @@
+<input type="hidden" id="idCliente" name="idCliente" value="<%=(item ? item.idCliente : 0) %>" />
+
+<div class="row">
+	
+
+	<div class="col-sm-6">
+		<div class="form-group">
+			<label for="nome_cliente">Nome</label>
+			<input id="nome_cliente" name="nome_cliente" maxlength="100" class="form-control" type="text" spellcheck="false" value="<%=(item ? item.nome_cliente : '') %>" />
+		</div>
+		<div class="col-sm-6">
+			<div class="form-group">
+				<label for="telefone_cliente">Telefone</label>
+				<input id="telefone_cliente" name="telefone_cliente" maxlength="15" class="form-control" type="text" spellcheck="false" value="<%=(item ? item.telefone_cliente : '') %>" />
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label for="interno">Interno</label>
+					<input id="interno" name="interno" maxlength="100" class="form-control" type="tinyint" spellcheck="false" value="<%=(item ? item.interno : '') %>" />
+				</div>
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label for="email_cliente">Email</label>
+						<input id="email_cliente" name="email_cliente" maxlength="100" class="form-control" type="text" spellcheck="false" value="<%=(item ? item.email_cliente : '') %>" />
+					</div>
+	</div>
+</div>
+
+<%- contentFor("scripts") %>
+<script type="text/javascript">
+	//<![CDATA[
+	"use strict";
+
+	$("#form").validate({
+		rules: {
+			idcliente: {
+				required: true
+			},
+			nome_cliente: {
+				required: true
+			}
+		},
+
+		submitHandler: function (form) {
+			if (JsonWebApi.active)
+				return;
+
+			Swal.wait();
+
+			//<% if (item) { %>
+
+			JsonWebApi.postFormData("<%- root %>/api/cliente/editar", form, function (response) {
+				if (response.success)
+					Swal.success("Cliente alterado com sucesso! " + emoji.happy);
+				else
+					Swal.error(response.value + " " + emoji.sad);
+			});
+
+			//<% } else { %>
+
+			JsonWebApi.postFormData("<%- root %>/api/cliente/criar", form, function (response) {
+				if (response.success) {
+					resetForm("#form");
+					Swal.success("Cliente criado com sucesso! " + emoji.happy);
+				} else {
+					Swal.error(response.value + " " + emoji.sad);
+				}
+			});
+
+			//<% } %>
+		}
+	});
+	//]]>
+</script>
