@@ -1,28 +1,36 @@
-<input type="hidden" id="idCliente" name="idCliente" value="<%=(item ? item.idCliente : 0) %>" />
+<input type="hidden" id="idcliente" name="idcliente" value="<%=(item ? item.idcliente : 0) %>" />
+
+<div class="form-group">
+	<label for="nome_cliente">Nome</label>
+	<input id="nome_cliente" name="nome_cliente" maxlength="100" class="form-control" type="text" spellcheck="false" value="<%=(item ? item.nome_cliente : '') %>" />
+</div>
+
+<div class="form-group">
+	<label for="responsavel">Responsável</label>
+	<input id="responsavel" name="responsavel" maxlength="100" class="form-control" type="text" spellcheck="false" value="<%=(item ? item.responsavel : '') %>" />
+</div>
+
+<div class="form-group">
+	<label for="email_cliente">E-mail</label>
+	<input id="email_cliente" name="email_cliente" maxlength="100" class="form-control" type="email" spellcheck="false" value="<%=(item ? item.email_cliente : '') %>" />
+</div>
 
 <div class="row">
-	
-
 	<div class="col-sm-6">
 		<div class="form-group">
-			<label for="nome_cliente">Nome do cliente</label>
-			<input id="nome_cliente" name="nome_cliente" maxlength="100" class="form-control" type="text" spellcheck="false" value="<%=(item ? item.nome_cliente : '') %>" />
+			<label for="telefone_cliente">Telefone</label>
+			<input id="telefone_cliente" name="telefone_cliente" maxlength="15" class="form-control" type="text" spellcheck="false" value="<%=(item ? item.telefone_cliente : '') %>" />
 		</div>
-		<div class="col-sm-6">
-			<div class="form-group">
-				<label for="telefone_cliente">Telefone</label>
-				<input id="telefone_cliente" name="telefone_cliente" maxlength="15" class="form-control" type="text" spellcheck="false" value="<%=(item ? item.telefone_cliente : '') %>" />
-			</div>
-			<div class="col-sm-6">
-				<div class="form-group">
-					<label for="interno">Interno</label>
-					<input id="interno" name="interno" maxlength="100" class="form-control" type="tinyint" spellcheck="false" value="<%=(item ? item.interno : '') %>" />
-				</div>
-				<div class="col-sm-6">
-					<div class="form-group">
-						<label for="email_cliente">Email</label>
-						<input id="email_cliente" name="email_cliente" maxlength="100" class="form-control" type="text" spellcheck="false" value="<%=(item ? item.email_cliente : '') %>" />
-					</div>
+	</div>
+	<div class="col-sm-6">
+		<div class="form-group">
+			<label for="interno">Interno</label>
+			<select id="interno" name="interno" class="form-control">
+				<option value="">Selecione...</option>
+				<option value="0" <%-(item && item.interno == 0 ? 'selected="selected"' : '') %>>Não</option>
+				<option value="1" <%-(item && item.interno == 1 ? 'selected="selected"' : '') %>>Sim</option>
+			</select>
+		</div>
 	</div>
 </div>
 
@@ -31,18 +39,20 @@
 	//<![CDATA[
 	"use strict";
 
+	maskMobilePhone("#telefone_cliente");
+
 	$("#form").validate({
 		rules: {
-			idcliente: {
-				required: true
-			},
 			nome_cliente: {
 				required: true
 			},
-			telefone_cliente: {
+			responsavel: {
 				required: true
 			},
 			email_cliente: {
+				required: true
+			},
+			telefone_cliente: {
 				required: true
 			},
 			interno: {

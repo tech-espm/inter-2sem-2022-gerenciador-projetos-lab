@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS cliente (
   nome_cliente VARCHAR(100) NOT NULL,
   telefone_cliente VARCHAR(15) NOT NULL,
   interno TINYINT NOT NULL,
-  responsavel varchar(100) NOT NULL, 
+  responsavel varchar(100) NOT NULL,
   email_cliente varchar(100) NOT NULL,
   PRIMARY KEY (idcliente)
 );
@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS projeto (
   semestre_inicial INT NOT NULL,
   ano_final INT NULL,
   semestre_final INT NULL,
-  aprovado TINYINT,
+  aprovado TINYINT NOT NULL,
   PRIMARY KEY (idprojeto),
   INDEX projeto_idcliente_FK_idx (idcliente ASC),
   INDEX projeto_idgestor_FK_idx (idgestor ASC),

@@ -156,6 +156,16 @@ class Usuario {
 		return (lista || []);
 	}
 
+	public static async listarDropDown(): Promise<Usuario[]> {
+		let lista: Usuario[] = null;
+
+		await app.sql.connect(async (sql) => {
+			lista = await sql.query("select id, nome from usuario u where exclusao is null order by nome") as Usuario[];
+		});
+
+		return (lista || []);
+	}
+
 	public static async obter(id: number): Promise<Usuario> {
 		let lista: Usuario[] = null;
 

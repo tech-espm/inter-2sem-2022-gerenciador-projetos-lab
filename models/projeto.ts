@@ -80,9 +80,9 @@ class Projeto {
 		});
 	}
 
-	public static obter(id: number): Promise<Projeto> {
+	public static obter(idprojeto: number): Promise<Projeto> {
 		return app.sql.connect(async (sql) => {
-			const lista: Projeto[] = (await sql.query("select idprojeto, idcliente, idgestor, idtecnico, nome_projeto, ano_inicial, semestre_inicial, ano_final, semestre_final, aprovado from projeto where id = ?", [id]));
+			const lista: Projeto[] = (await sql.query("select idprojeto, idcliente, idgestor, idtecnico, nome_projeto, ano_inicial, semestre_inicial, ano_final, semestre_final, aprovado from projeto where idprojeto = ?", [idprojeto]));
 			if (!lista || lista.length === 0) {
 				return null;
 			}
@@ -97,7 +97,7 @@ class Projeto {
 
 		return app.sql.connect(async (sql) => {
 			try {
-				await sql.query("insert into projeto (idcliente, idgestor, idtecnico, nome_projeto, ano_inicial, semestre_inicial, ano_final, semestre_final) values (?, ?, ?, ?, ?, ?, ?, ?)", [projeto.idcliente, projeto.idgestor, projeto.idtecnico, projeto.nome_projeto, projeto.ano_inicial, projeto.semestre_inicial, projeto.ano_final, projeto.semestre_final]);
+				await sql.query("insert into projeto (idcliente, idgestor, idtecnico, nome_projeto, ano_inicial, semestre_inicial, ano_final, semestre_final, aprovado) values (?, ?, ?, ?, ?, ?, ?, ?, ?)", [projeto.idcliente, projeto.idgestor, projeto.idtecnico, projeto.nome_projeto, projeto.ano_inicial, projeto.semestre_inicial, projeto.ano_final, projeto.semestre_final, projeto.aprovado]);
  				return null;
 			} catch (e) {
 				if (e.code) {
@@ -122,7 +122,7 @@ class Projeto {
 
 		return app.sql.connect(async (sql) => {
 			try {
-				await sql.query("update projeto set idcliente = ?, idgestor = ?, idtecnico = ?, nome_projeto = ?, ano_inicial = ?, semestre_inicial = ?, ano_final = ?, semestre_final = ? where idprojeto = ?", [projeto.idcliente, projeto.idgestor, projeto.idtecnico, projeto.nome_projeto, projeto.ano_inicial, projeto.semestre_inicial, projeto.ano_final, projeto.semestre_final, projeto.idprojeto]);
+				await sql.query("update projeto set idcliente = ?, idgestor = ?, idtecnico = ?, nome_projeto = ?, ano_inicial = ?, semestre_inicial = ?, ano_final = ?, semestre_final = ?, aprovado = ? where idprojeto = ?", [projeto.idcliente, projeto.idgestor, projeto.idtecnico, projeto.nome_projeto, projeto.ano_inicial, projeto.semestre_inicial, projeto.ano_final, projeto.semestre_final, projeto.aprovado, projeto.idprojeto]);
 				return (sql.affectedRows ? null : "Projeto não encontrado");
 			} catch (e) {
 				if (e.code) {
@@ -140,9 +140,9 @@ class Projeto {
 		});
 	}
 
-	public static excluir(id: number): Promise<string> {
+	public static excluir(idprojeto: number): Promise<string> {
 		return app.sql.connect(async (sql) => {
-			await sql.query("delete from projeto where idprojeto = ?", [id]);
+			await sql.query("delete from projeto where idprojeto = ?", [idprojeto]);
 			return (sql.affectedRows ? null : "Projeto não encontrado");
 		});
 	}

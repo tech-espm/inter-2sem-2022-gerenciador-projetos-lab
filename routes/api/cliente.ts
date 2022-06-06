@@ -1,14 +1,14 @@
 ﻿import app = require("teem");
-import Projeto = require("../../models/projeto");
+import Cliente = require("../../models/cliente");
 import Usuario = require("../../models/usuario");
 
-class ProjetoApiRoute {
+class ClienteApiRoute {
 	public static async listar(req: app.Request, res: app.Response) {
 		const u = await Usuario.cookie(req, res, true);
 		if (!u)
 			return;
 
-		res.json(await Projeto.listar());
+		res.json(await Cliente.listar());
 	}
 
 	@app.http.post()
@@ -17,7 +17,7 @@ class ProjetoApiRoute {
 		if (!u)
 			return;
 
-		const erro = await Projeto.criar(req.body);
+		const erro = await Cliente.criar(req.body);
 
 		if (erro) {
 			res.status(400).json(erro);
@@ -33,7 +33,7 @@ class ProjetoApiRoute {
 		if (!u)
 			return;
 
-		const erro = await Projeto.editar(req.body);
+		const erro = await Cliente.editar(req.body);
 
 		if (erro) {
 			res.status(400).json(erro);
@@ -49,14 +49,14 @@ class ProjetoApiRoute {
 		if (!u)
 			return;
 
-		const idprojeto = parseInt(req.query["idprojeto"] as string);
+		const idcliente = parseInt(req.query["idcliente"] as string);
 
-		if (isNaN(idprojeto)) {
+		if (isNaN(idcliente)) {
 			res.status(400).json("Id inválido");
 			return;
 		}
 
-		const erro = await Projeto.excluir(idprojeto);
+		const erro = await Cliente.excluir(idcliente);
 
 		if (erro) {
 			res.status(400).json(erro);
@@ -67,4 +67,4 @@ class ProjetoApiRoute {
 	}
 }
 
-export = ProjetoApiRoute;
+export = ClienteApiRoute;

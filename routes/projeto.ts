@@ -1,9 +1,8 @@
 ﻿
-import Projeto from "../models/projeto";
-import Usuario from "../models/usuario";
 import app = require("teem");
-
-
+import Cliente = require("../models/cliente");
+import Projeto = require("../models/projeto");
+import Usuario = require("../models/usuario");
 
 class ProjetoRoute {
 	public static async criar(req: app.Request, res: app.Response) {
@@ -12,10 +11,12 @@ class ProjetoRoute {
 			res.redirect(app.root + "/acesso");
 		else
 			res.render("projeto/editar", {
-				titulo: "Criar projeto",
+				titulo: "Criar Projeto",
 				textoSubmit: "Criar",
 				usuario: u,
 				item: null,
+				clientes: await Cliente.listarDropDown(),
+				usuarios: await Usuario.listarDropDown()
 			});
 	}
 
@@ -33,9 +34,11 @@ class ProjetoRoute {
 				});
 			else
 				res.render("projeto/editar", {
-					titulo: "Editar projeto",
+					titulo: "Editar Projeto",
 					usuario: u,
 					item: item,
+					clientes: await Cliente.listarDropDown(),
+					usuarios: await Usuario.listarDropDown()
 				});
 		}
 	}
@@ -47,9 +50,9 @@ class ProjetoRoute {
 		else
 			res.render("projeto/listar", {
 				layout: "layout-tabela",
-				titulo: "Gerenciar projetos",
+				titulo: "Gerenciar Projetos",
 				datatables: true,
-				projeto: u,
+				usuario: u,
 				lista: await Projeto.listar()
 			});
 	}

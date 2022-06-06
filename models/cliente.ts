@@ -46,9 +46,15 @@ class Cliente {
 		});
 	}
 
-	public static obter(id: number): Promise<Cliente> {
+	public static listarDropDown(): Promise<Cliente[]> {
 		return app.sql.connect(async (sql) => {
-			const lista: Cliente[] = (await sql.query("select idcliente, nome_cliente, telefone_cliente, responsavel, email_cliente, interno from cliente where id = ?", [id]));
+			return (await sql.query("select idcliente, nome_cliente from cliente order by nome_cliente"));
+		});
+	}
+
+	public static obter(idcliente: number): Promise<Cliente> {
+		return app.sql.connect(async (sql) => {
+			const lista: Cliente[] = (await sql.query("select idcliente, nome_cliente, telefone_cliente, responsavel, email_cliente, interno from cliente where idcliente = ?", [idcliente]));
 			if (!lista || lista.length === 0) {
 				return null;
 			}
@@ -78,9 +84,9 @@ class Cliente {
 		});
 	}
 
-	public static excluir(id: number): Promise<string> {
+	public static excluir(idcliente: number): Promise<string> {
 		return app.sql.connect(async (sql) => {
-			await sql.query("delete from cliente where idcliente = ?", [id]);
+			await sql.query("delete from cliente where idcliente = ?", [idcliente]);
 			return (sql.affectedRows ? null : "Cliente não encontrado");
 		});
 	}

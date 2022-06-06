@@ -9,7 +9,7 @@ class ClienteRoute {
 		if (!u || !u.admin)
 			res.redirect(app.root + "/acesso");
 		else
-			res.render("Cliente/editar", {
+			res.render("cliente/editar", {
 				titulo: "Criar Cliente",
 				textoSubmit: "Criar",
 				usuario: u,
@@ -30,7 +30,7 @@ class ClienteRoute {
 					usuario: u
 				});
 			else
-				res.render("Cliente/editar", {
+				res.render("cliente/editar", {
 					titulo: "Editar Cliente",
 					usuario: u,
 					item: item
@@ -43,7 +43,7 @@ class ClienteRoute {
 		if (!u || !u.admin)
 			res.redirect(app.root + "/acesso");
 		else
-			res.render("Cliente/listar", {
+			res.render("cliente/listar", {
 				layout: "layout-tabela",
 				titulo: "Gerenciar Clientes",
 				datatables: true,

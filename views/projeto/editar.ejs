@@ -3,68 +3,110 @@
 <div class="row">
 	<div class="col-sm-6">
 		<div class="form-group">
-			<label for="nome_projeto">Nome do projeto</label>
+			<label for="nome_projeto">Nome</label>
 			<input id="nome_projeto" name="nome_projeto" maxlength="100" class="form-control" type="text" spellcheck="false" value="<%=(item ? item.nome_projeto : '') %>" />
 		</div>
 	</div>
 
 	<div class="col-sm-6">
 		<div class="form-group">
-			<label for="aprovado">Aprovação do projeto</label>
-			<input id="aprovado" name="aprovado" class="form-control" type="number" value="<%=(item ? item.aprovado : '') %>" />
+			<label for="aprovado">Aprovação</label>
+			<select id="aprovado" name="aprovado" class="form-control">
+				<option value="">Selecione...</option>
+				<option value="0" <%-(item && item.aprovado == 0 ? 'selected="selected"' : '') %>>Reprovado</option>
+				<option value="1" <%-(item && item.aprovado == 1 ? 'selected="selected"' : '') %>>Aprovado</option>
+			</select>
 		</div>
 	</div>
 </div>
 
 <div class="row">
-	<div class="col-sm-6">
-	<div class="form-group">
-		<label for="idcliente">ID do cliente</label>
-		<input id="idcliente" name="idcliente" class="form-control" type="number" value="<%=(item ? item.idcliente : '') %>" />
-	</div>
-	</div>
-
-	<div class="col-sm-6">
+	<div class="col-sm-4">
 		<div class="form-group">
-			<label for="idgestor:">ID do professor gestor</label>
-			<input id="idgestor:" name="idgestor:" class="form-control" type="number" value="<%=(item ? item.idgestor: : '') %>" />
+			<label for="idcliente">Cliente</label>
+			<div class="cb-search">
+				<select id="idcliente" name="idcliente" class="form-control" size="1">
+					<option value="">Selecione...</option>
+					<% for (let i = 0; i < clientes.length; i++) { %>
+					<option value="<%= clientes[i].idcliente %>" <%-((item && item.idcliente === clientes[i].idcliente) ? 'selected="selected"' : '') %>><%= clientes[i].nome_cliente %></option>
+					<% } %>
+				</select>
+			</div>
+			<script type="text/javascript">
+				prepareCbSearch(document.getElementById("idcliente"));
+			</script>
 		</div>
 	</div>
 
-	<div class="col-sm-6">
+	<div class="col-sm-4">
 		<div class="form-group">
-			<label for="idtecnico:">ID do responsável técnico</label>
-			<input id="idtecnico:" name="idtecnico:" class="form-control" type="number" value="<%=(item ? item.idtecnico: : '') %>" />
+			<label for="idgestor">Gestor</label>
+			<div class="cb-search">
+				<select id="idgestor" name="idgestor" class="form-control" size="1">
+					<option value="">Selecione...</option>
+					<% for (let i = 0; i < usuarios.length; i++) { %>
+					<option value="<%= usuarios[i].id %>" <%-((item && item.idgestor === usuarios[i].id) ? 'selected="selected"' : '') %>><%= usuarios[i].nome %></option>
+					<% } %>
+				</select>
+			</div>
+			<script type="text/javascript">
+				prepareCbSearch(document.getElementById("idgestor"));
+			</script>
+		</div>
+	</div>
+
+	<div class="col-sm-4">
+		<div class="form-group">
+			<label for="idtecnico">Responsável Técnico</label>
+			<div class="cb-search">
+				<select id="idtecnico" name="idtecnico" class="form-control" size="1">
+					<option value="">Selecione...</option>
+					<% for (let i = 0; i < usuarios.length; i++) { %>
+					<option value="<%= usuarios[i].id %>" <%-((item && item.idtecnico === usuarios[i].id) ? 'selected="selected"' : '') %>><%= usuarios[i].nome %></option>
+					<% } %>
+				</select>
+			</div>
+			<script type="text/javascript">
+				prepareCbSearch(document.getElementById("idtecnico"));
+			</script>
 		</div>
 	</div>
 </div>
 
 <div class="row">
-	<div class="col-sm-6">
+	<div class="col-sm-6 col-md-3">
 		<div class="form-group">
-			<label for="ano_inicial:">Ano inicial</label>
-			<input id="ano_inicial:" name="ano_inicial:" class="form-control" type="number" value="<%=(item ? item.ano_inicial: : '') %>" />
+			<label for="ano_inicial">Ano inicial</label>
+			<input id="ano_inicial" name="ano_inicial" class="form-control" type="number" value="<%=(item ? item.ano_inicial : '') %>" />
 		</div>
 	</div>
 
-	<div class="col-sm-6">
+	<div class="col-sm-6 col-md-3">
 		<div class="form-group">
-			<label for="semestre_inicial:">Semestre inicial</label>
-			<input id="semestre_inicial:" name="semestre_inicial:" class="form-control" type="number" value="<%=(item ? item.semestre_inicial: : '') %>" />
+			<label for="semestre_inicial">Semestre inicial</label>
+			<select id="semestre_inicial" name="semestre_inicial" class="form-control">
+				<option value="">Selecione...</option>
+				<option value="1" <%-(item && item.semestre_inicial == 1 ? 'selected="selected"' : '') %>>1</option>
+				<option value="2" <%-(item && item.semestre_inicial == 2 ? 'selected="selected"' : '') %>>2</option>
+			</select>
 		</div>
 	</div>
 
-	<div class="col-sm-6">
+	<div class="col-sm-6 col-md-3">
 		<div class="form-group">
-			<label for="ano_final:">Ano final</label>
-			<input id="ano_final:" name="ano_final:" class="form-control" type="number" value="<%=(item ? item.ano_final: : '') %>" />
+			<label for="ano_final">Ano final</label>
+			<input id="ano_final" name="ano_final" class="form-control" type="number" value="<%=(item ? item.ano_final : '') %>" />
 		</div>
 	</div>
 
-	<div class="col-sm-6">
+	<div class="col-sm-6 col-md-3">
 		<div class="form-group">
-			<label for="semestre_final:">Semestre final</label>
-			<input id="semestre_final:" name="semestre_final:" class="form-control" type="number" value="<%=(item ? item.semestre_final: : '') %>" />
+			<label for="semestre_final">Semestre final</label>
+			<select id="semestre_final" name="semestre_final" class="form-control">
+				<option value="">Selecione...</option>
+				<option value="1" <%-(item && item.semestre_final == 1 ? 'selected="selected"' : '') %>>1</option>
+				<option value="2" <%-(item && item.semestre_final == 2 ? 'selected="selected"' : '') %>>2</option>
+			</select>
 		</div>
 	</div>
 	
@@ -96,12 +138,6 @@
 				required: true
 			},
 			semestre_inicial: {
-				required: true
-			},
-			ano_final: {
-				required: true
-			},
-			semestre_final: {
 				required: true
 			}
 		},
