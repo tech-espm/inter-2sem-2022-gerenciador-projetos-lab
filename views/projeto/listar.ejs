@@ -1,0 +1,70 @@
+﻿<table class="table table-flush table-striped table-hover" id="tabela"></table>
+
+<%- contentFor("scripts") %>
+<script type="text/javascript">
+	//<![CDATA[
+	"use strict";
+
+	var tabela = prepareDataTable("tabela", {
+		order: [[1, "asc"]],
+		deferRender: true,
+		columns: [
+			{ title: "", "class": "col-min", searchable: false, orderable: false, data: "idprojeto", render: function (v, type, row) { return '<a target="_blank" title="Editar" href="<%- root %>/projeto/editar?id=' + row.idprojeto + '" class="btn btn-sm btn-outline-primary"><i class="fa fa-fw fa-edit"></i></a> <button title="Excluir" type="button" data-excluir="1" class="btn btn-sm btn-outline-danger"><i class="fa fa-fw fa-times"></i></button>'; } },
+			{ title: "Nome", render: encode, data: "nome_projeto" },
+			{ title: "idcliente", render: encode, data: "idcliente" },
+			{ title: "idtecnico", render: encode, data: "idtecnico" },
+			{ title: "ano_inicial", render: encode, data: "ano_inicial" },
+			{ title: "semestre_inicial", render: encode, data: "semestre_inicial" },
+			{ title: "ano_final", render: encode, data: "ano_final" },
+			{ title: "semestre_final", render: encode, data: "semestre_final" },
+			{ title: "aprovado", render: encode, data: "aprovado" },
+			{ title: "idgestor", render: encode, data: "idgestor" },
+		],
+		data: <%- JSON.stringify(lista) %>,
+		export: { title: "Projetos" }
+	});
+
+	$("#tabela").on("click", "tbody button", function () {
+		if (JsonWebApi.active)
+			return;
+
+		var trClicada = this.parentNode.parentNode,
+			idprojeto = null,
+			projeto = tabela.row(trClicada).data();
+
+		if (this.getAttribute("data-excluir")) {
+			Swal.okcancel({
+				html: 'Tem certeza que deseja excluir o projeto "' + projeto.idprojeto + '"? Esta operação NÃO pode ser desfeita!<br/><br/>Para confirmar a exclusão, por favor, digite abaixo o RA do aluno conforme exibido acima.<br/><br/><label for="txtExcluirProjeto">ID do Projeto</label><input type="number" class="form-control" autocomplete="off" id="txtExcluirProjeto" />',
+				confirmButtonText: "Excluir",
+				preConfirm: function () {
+					idprojeto = parseInt($("#txtExcluirProjeto").val());
+					return true;
+				}
+			}, null, true).then(function (result) {
+				if (JsonWebApi.active || !trClicada)
+					return;
+
+				if (result.value) {
+					if (idprojeto !== projeto.idprojeto) {
+						Swal.error("O ID do projeto não confere! " + emoji.sad);
+						return;
+					}
+
+					Swal.wait();
+
+					JsonWebApi.delete("<%- root %>/api/projeto/excluir", function (response) {
+						if (response.success) {
+							Swal.success("Projeto excluído com sucesso! " + emoji.happy);
+							tabela.row(trClicada).remove().draw();
+						} else {
+							Swal.error(response.value + " " + emoji.sad);
+						}
+						trClicada = null;
+					}, "idprojeto", projeto.projeto);
+				}
+			});
+		}
+	});
+
+	//]]>
+</script>

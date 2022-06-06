@@ -30,10 +30,10 @@
 
 		if (this.getAttribute("data-excluir")) {
 			Swal.okcancel({
-				html: 'Tem certeza que deseja excluir o cliente "' + cliente.idcliente + '"? Esta operação NÃO pode ser desfeita!<br/><br/>Para confirmar a exclusão, por favor, digite abaixo o ID do cliente conforme exibido acima.<br/><br/><label for="txtExcluirRA">Id do cliente</label><input type="number" class="form-control" autocomplete="off" id="txtExcluirRA" />',
+				html: 'Tem certeza que deseja excluir o cliente "' + cliente.idcliente + '"? Esta operação NÃO pode ser desfeita!<br/><br/>Para confirmar a exclusão, por favor, digite abaixo o ID do cliente conforme exibido acima.<br/><br/><label for="txtExcluirCliente">Id do cliente</label><input type="number" class="form-control" autocomplete="off" id="txtExcluirCliente" />',
 				confirmButtonText: "Excluir",
 				preConfirm: function () {
-					idcliente = parseInt($("#txtExcluirRA").val());
+					idcliente = parseInt($("#txtExcluirCliente").val());
 					return true;
 				}
 			}, null, true).then(function (result) {
@@ -42,7 +42,7 @@
 
 				if (result.value) {
 					if (idcliente !== cliente.idcliente) {
-						Swal.error("O ID do usuário não confere! " + emoji.sad);
+						Swal.error("O ID do cliente não confere! " + emoji.sad);
 						return;
 					}
 

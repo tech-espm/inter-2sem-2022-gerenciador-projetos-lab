@@ -5,7 +5,7 @@
 
 	<div class="col-sm-6">
 		<div class="form-group">
-			<label for="nome_cliente">Nome</label>
+			<label for="nome_cliente">Nome do cliente</label>
 			<input id="nome_cliente" name="nome_cliente" maxlength="100" class="form-control" type="text" spellcheck="false" value="<%=(item ? item.nome_cliente : '') %>" />
 		</div>
 		<div class="col-sm-6">
@@ -37,6 +37,15 @@
 				required: true
 			},
 			nome_cliente: {
+				required: true
+			},
+			telefone_cliente: {
+				required: true
+			},
+			email_cliente: {
+				required: true
+			},
+			interno: {
 				required: true
 			}
 		},

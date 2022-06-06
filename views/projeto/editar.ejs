@@ -1,0 +1,139 @@
+<input type="hidden" id="idprojeto" name="idprojeto" value="<%=(item ? item.idprojeto : 0) %>" />
+
+<div class="row">
+	<div class="col-sm-6">
+		<div class="form-group">
+			<label for="nome_projeto">Nome do projeto</label>
+			<input id="nome_projeto" name="nome_projeto" maxlength="100" class="form-control" type="text" spellcheck="false" value="<%=(item ? item.nome_projeto : '') %>" />
+		</div>
+	</div>
+
+	<div class="col-sm-6">
+		<div class="form-group">
+			<label for="aprovado">Aprovação do projeto</label>
+			<input id="aprovado" name="aprovado" class="form-control" type="number" value="<%=(item ? item.aprovado : '') %>" />
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-sm-6">
+	<div class="form-group">
+		<label for="idcliente">ID do cliente</label>
+		<input id="idcliente" name="idcliente" class="form-control" type="number" value="<%=(item ? item.idcliente : '') %>" />
+	</div>
+	</div>
+
+	<div class="col-sm-6">
+		<div class="form-group">
+			<label for="idgestor:">ID do professor gestor</label>
+			<input id="idgestor:" name="idgestor:" class="form-control" type="number" value="<%=(item ? item.idgestor: : '') %>" />
+		</div>
+	</div>
+
+	<div class="col-sm-6">
+		<div class="form-group">
+			<label for="idtecnico:">ID do responsável técnico</label>
+			<input id="idtecnico:" name="idtecnico:" class="form-control" type="number" value="<%=(item ? item.idtecnico: : '') %>" />
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-sm-6">
+		<div class="form-group">
+			<label for="ano_inicial:">Ano inicial</label>
+			<input id="ano_inicial:" name="ano_inicial:" class="form-control" type="number" value="<%=(item ? item.ano_inicial: : '') %>" />
+		</div>
+	</div>
+
+	<div class="col-sm-6">
+		<div class="form-group">
+			<label for="semestre_inicial:">Semestre inicial</label>
+			<input id="semestre_inicial:" name="semestre_inicial:" class="form-control" type="number" value="<%=(item ? item.semestre_inicial: : '') %>" />
+		</div>
+	</div>
+
+	<div class="col-sm-6">
+		<div class="form-group">
+			<label for="ano_final:">Ano final</label>
+			<input id="ano_final:" name="ano_final:" class="form-control" type="number" value="<%=(item ? item.ano_final: : '') %>" />
+		</div>
+	</div>
+
+	<div class="col-sm-6">
+		<div class="form-group">
+			<label for="semestre_final:">Semestre final</label>
+			<input id="semestre_final:" name="semestre_final:" class="form-control" type="number" value="<%=(item ? item.semestre_final: : '') %>" />
+		</div>
+	</div>
+	
+</div>
+
+<%- contentFor("scripts") %>
+<script type="text/javascript">
+	//<![CDATA[
+	"use strict";
+
+	$("#form").validate({
+		rules: {
+			nome_projeto: {
+				required: true
+			},
+			aprovado: {
+				required: true
+			},
+			idcliente: {
+				required: true
+			},
+			idgestor: {
+				required: true
+			},
+			idtecnico: {
+				required: true
+			},
+			ano_inicial: {
+				required: true
+			},
+			semestre_inicial: {
+				required: true
+			},
+			ano_final: {
+				required: true
+			},
+			semestre_final: {
+				required: true
+			}
+		},
+
+		submitHandler: function (form) {
+			if (JsonWebApi.active)
+				return;
+
+			Swal.wait();
+
+			//<% if (item) { %>
+
+			JsonWebApi.postFormData("<%- root %>/api/projeto/editar", form, function (response) {
+				if (response.success)
+					Swal.success("Projeto alterado com sucesso! " + emoji.happy);
+				else
+					Swal.error(response.value + " " + emoji.sad);
+			});
+
+			//<% } else { %>
+
+			JsonWebApi.postFormData("<%- root %>/api/projeto/criar", form, function (response) {
+				if (response.success) {
+					resetForm("#form");
+					Swal.success("Projeto criado com sucesso! " + emoji.happy);
+				} else {
+					Swal.error(response.value + " " + emoji.sad);
+				}
+			});
+
+			//<% } %>
+		}
+	});
+	//]]>
+</script>
