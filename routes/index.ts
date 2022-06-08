@@ -1,18 +1,22 @@
 ﻿import app = require("teem");
 import appsettings = require("../appsettings");
+import Projeto = require("../models/projeto");
 import Usuario = require("../models/usuario");
 
 class IndexRoute {
 	public static async index(req: app.Request, res: app.Response) {
 		let u = await Usuario.cookie(req);
-		if (!u)
+		if (!u) {
 			res.redirect(app.root + "/login");
-		else
+		} else {
+			const hoje = new Date();
 			res.render("index/index", {
 				layout: "layout-sem-form",
 				titulo: "Dashboard",
-				usuario: u
+				usuario: u,
+				projetos: await Projeto.listarFiltro(hoje.getFullYear(), (hoje.getMonth() < 6) ? 1 : 2)
 			});
+		}
 	}
 
 	@app.http.all()

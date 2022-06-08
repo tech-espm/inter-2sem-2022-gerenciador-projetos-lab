@@ -84,6 +84,23 @@ class Projeto {
 		});
 	}
 
+	public static listarFiltro(ano: number, semestre: number): Promise<Projeto[]> {
+		return app.sql.connect(async (sql) => {
+			return (await sql.query(`
+				select p.idprojeto, p.idcliente, p.idgestor, p.idtecnico, p.nome_projeto, p.ano_inicial, p.semestre_inicial, p.ano_final, p.semestre_final, p.aprovado,
+				c.nome_cliente,
+				g.nome nome_gestor,
+				t.nome nome_tecnico
+				from projeto p
+				inner join cliente c on c.idcliente = p.idcliente
+				inner join usuario g on g.id = p.idgestor
+				inner join usuario t on t.id = p.idtecnico
+				where p.ano_inicial = ?
+				and p.semestre_inicial = ?
+			`, [ano, semestre]));
+		});
+	}
+
 	public static obter(idprojeto: number): Promise<Projeto> {
 		return app.sql.connect(async (sql) => {
 			const lista: Projeto[] = (await sql.query("select idprojeto, idcliente, idgestor, idtecnico, nome_projeto, ano_inicial, semestre_inicial, ano_final, semestre_final, aprovado from projeto where idprojeto = ?", [idprojeto]));
