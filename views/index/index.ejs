@@ -1,16 +1,15 @@
 ﻿<div class="row">
 
-	<% if (!projetos.length == 0) { %>
-		<div class="col-xl-4 col-md-4 mb-4">
+	<% if (!projetos.length) { %>
+	<div class="col-xl-4 col-md-4 mb-4">
 			<div class="card border-danger shadow h-100 py-3">
-				<!-- Card Body -->
 				<div class="card-body">
 					<div class="mt-4 font-weight-bold text-center medium">Opa!</div>
 					<div class="mt-4 text-center small">Parece que você não tem nenhum projeto cadastrado!></div>	
 				</div>
 			</div>
 		</div>
-	<% } else { %>
+	<% } else  { %> 
 	<% for (let i = 0; i < projetos.length; i++) { %>
 	<div class="col-xl-4 col-md-4 mb-4">
 		<div class="card border-danger shadow h-100 py-3">
