@@ -1,4 +1,5 @@
 <input type="hidden" id="idprojeto" name="idprojeto" value="<%=(item ? item.idprojeto : 0) %>" />
+<input type="hidden" id="idsAluno" name="idsAluno" value="" />
 
 <div class="row">
 	<div class="col-sm-6">
@@ -112,10 +113,50 @@
 	
 </div>
 
+<hr />
+
+<div class="row">
+	<div class="col-sm-4">
+		<div class="form-group">
+			<button type="button" class="btn btn-primary btn-block" onclick="adicionarAluno()"><i class="fa fa-plus"></i> Adicionar</button>
+		</div>
+	</div>
+
+	<div class="col-sm-8">
+		<div class="form-group">
+			<div class="cb-search">
+				<select id="idaluno" name="idaluno" class="form-control" size="1">
+					<option value="">Selecione...</option>
+					<% for (let i = 0; i < alunos.length; i++) { %>
+					<option value="<%= alunos[i].idaluno %>"><%= alunos[i].nome_aluno %></option>
+					<% } %>
+				</select>
+			</div>
+			<script type="text/javascript">
+				prepareCbSearch(document.getElementById("idaluno"));
+			</script>
+		</div>
+	</div>
+</div>
+
+<table class="table table-striped table-hover">
+	<thead>
+		<tr>
+			<th>Nome</th>
+			<th class="col-min"></th>
+		</tr>
+	</thead>
+	<tbody id="tabelaAlunos"></tbody>
+</table>
+
 <%- contentFor("scripts") %>
 <script type="text/javascript">
 	//<![CDATA[
 	"use strict";
+	let idaluno = document.getElementById("idaluno"),
+		idsAluno = document.getElementById("idsAluno"),
+		tabelaAlunos = document.getElementById("tabelaAlunos"),
+		alunos = <%- (item ? JSON.stringify(item.alunos) : "[]") %>;
 
 	$("#form").validate({
 		rules: {
@@ -146,6 +187,12 @@
 			if (JsonWebApi.active)
 				return;
 
+			let ids = [], linhas = tabelaAlunos.getElementsByTagName("tr");
+			for (let i = 0; i < linhas.length; i++) {
+				ids.push(linhas[i].getAttribute("data-id"));
+			}
+			idsAluno.value = ids.join(",");
+
 			Swal.wait();
 
 			//<% if (item) { %>
@@ -162,6 +209,7 @@
 			JsonWebApi.postFormData("<%- root %>/api/projeto/criar", form, function (response) {
 				if (response.success) {
 					resetForm("#form");
+					tabelaAlunos.innerHTML = "";
 					Swal.success("Projeto criado com sucesso! " + emoji.happy);
 				} else {
 					Swal.error(response.value + " " + emoji.sad);
@@ -171,5 +219,37 @@
 			//<% } %>
 		}
 	});
+
+	function removerLinhaTabela(tr) {
+		tabelaAlunos.removeChild(tr);
+	}
+
+	function adicionarAlunoTabela(id, nome) {
+		let tr = document.createElement("tr");
+		tr.setAttribute("data-id", id);
+		tr.innerHTML = `
+			<td>${encode(nome)}</td>
+			<td class="col-min"><button type="button" class="btn btn-danger" onclick="removerLinhaTabela(this.parentNode.parentNode)"><i class="fa fa-times"></i> Remover</td>
+		`;
+		tabelaAlunos.appendChild(tr);
+	}
+
+	function adicionarAluno() {
+		if (!idaluno.value) {
+			return;
+		}
+
+		adicionarAlunoTabela(idaluno.value, idaluno.options[idaluno.selectedIndex].textContent);
+	}
+
+	function adicionarAlunosIniciais() {
+		for (let i = 0; i < alunos.length; i++) {
+			adicionarAlunoTabela(alunos[i].idaluno, alunos[i].nome_aluno);
+		}
+	}
+
+	if (alunos) {
+		adicionarAlunosIniciais();
+	}
 	//]]>
 </script>

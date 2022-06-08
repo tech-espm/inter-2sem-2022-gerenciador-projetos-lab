@@ -1,4 +1,5 @@
 ﻿import app = require("teem");
+import Aluno = require("./aluno");
 
 interface Projeto {
 	idprojeto: number;
@@ -11,6 +12,9 @@ interface Projeto {
 	ano_final: number;
 	semestre_final: number;
 	aprovado: number;
+
+	alunos?: Aluno[];
+	idsAluno?: string;
 }
 
 class Projeto {
@@ -86,7 +90,11 @@ class Projeto {
 			if (!lista || lista.length === 0) {
 				return null;
 			}
-			return lista[0];
+			const projeto = lista[0];
+			if (projeto) {
+				projeto.alunos = await sql.query("select a.idaluno, a.nome_aluno, a.ra_aluno from projeto_aluno pa inner join aluno a on a.idaluno = pa.idaluno where pa.idprojeto = ?", [idprojeto]);
+			}
+			return projeto;
 		});
 	}
 
@@ -97,8 +105,24 @@ class Projeto {
 
 		return app.sql.connect(async (sql) => {
 			try {
+				await sql.beginTransaction();
+
 				await sql.query("insert into projeto (idcliente, idgestor, idtecnico, nome_projeto, ano_inicial, semestre_inicial, ano_final, semestre_final, aprovado) values (?, ?, ?, ?, ?, ?, ?, ?, ?)", [projeto.idcliente, projeto.idgestor, projeto.idtecnico, projeto.nome_projeto, projeto.ano_inicial, projeto.semestre_inicial, projeto.ano_final, projeto.semestre_final, projeto.aprovado]);
- 				return null;
+
+				let idprojeto = await sql.scalar("select last_insert_id()") as number;
+
+				if (projeto.idsAluno) {
+					const idsAluno = projeto.idsAluno.split(",");
+					if (idsAluno && idsAluno.length) {
+						for (let i = 0; i < idsAluno.length; i++) {
+							await sql.query("insert into projeto_aluno (idprojeto, idaluno) values (?, ?)", [idprojeto, parseInt(idsAluno[i])]);
+						}
+					}
+				}
+
+				await sql.commit();
+
+				return null;
 			} catch (e) {
 				if (e.code) {
 					switch (e.code) {
@@ -122,8 +146,27 @@ class Projeto {
 
 		return app.sql.connect(async (sql) => {
 			try {
+				await sql.beginTransaction();
+
 				await sql.query("update projeto set idcliente = ?, idgestor = ?, idtecnico = ?, nome_projeto = ?, ano_inicial = ?, semestre_inicial = ?, ano_final = ?, semestre_final = ?, aprovado = ? where idprojeto = ?", [projeto.idcliente, projeto.idgestor, projeto.idtecnico, projeto.nome_projeto, projeto.ano_inicial, projeto.semestre_inicial, projeto.ano_final, projeto.semestre_final, projeto.aprovado, projeto.idprojeto]);
-				return (sql.affectedRows ? null : "Projeto não encontrado");
+
+				if (!sql.affectedRows)
+					return "Projeto não encontrado";
+
+				await sql.query("delete from projeto_aluno where idprojeto = ?", [projeto.idprojeto]);
+
+				if (projeto.idsAluno) {
+					const idsAluno = projeto.idsAluno.split(",");
+					if (idsAluno && idsAluno.length) {
+						for (let i = 0; i < idsAluno.length; i++) {
+							await sql.query("insert into projeto_aluno (idprojeto, idaluno) values (?, ?)", [projeto.idprojeto, parseInt(idsAluno[i])]);
+						}
+					}
+				}
+
+				await sql.commit();
+	
+				return null;
 			} catch (e) {
 				if (e.code) {
 					switch (e.code) {

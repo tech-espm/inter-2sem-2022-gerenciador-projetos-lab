@@ -1,5 +1,6 @@
 ﻿
 import app = require("teem");
+import Aluno = require("../models/aluno");
 import Cliente = require("../models/cliente");
 import Projeto = require("../models/projeto");
 import Usuario = require("../models/usuario");
@@ -16,7 +17,8 @@ class ProjetoRoute {
 				usuario: u,
 				item: null,
 				clientes: await Cliente.listarDropDown(),
-				usuarios: await Usuario.listarDropDown()
+				usuarios: await Usuario.listarDropDown(),
+				alunos: await Aluno.listar()
 			});
 	}
 
@@ -38,7 +40,8 @@ class ProjetoRoute {
 					usuario: u,
 					item: item,
 					clientes: await Cliente.listarDropDown(),
-					usuarios: await Usuario.listarDropDown()
+					usuarios: await Usuario.listarDropDown(),
+					alunos: await Aluno.listar()
 				});
 		}
 	}
