@@ -15,6 +15,7 @@ $gray-700: #6e707e !default;
 $gray-800: #5a5c69 !default;
 $gray-900: #3a3b45 !default;
 $black: #000 !default;
+$red-190: #961616 !default;
 
 $blue: #4e73df !default;
 $indigo: #6610f2 !default;
@@ -28,7 +29,7 @@ $teal: #20c9a6 !default;
 $cyan: #36b9cc !default;
 
 // scss/bootstrap/_variables.scss
-$bs-primary: $blue !default;
+$bs-primary: $red-190 !default;
 $bs-secondary: $gray-600 !default;
 $bs-success: $green !default;
 $bs-info: $cyan !default;
